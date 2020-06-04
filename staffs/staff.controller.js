@@ -25,14 +25,15 @@ const update = function(req, res) {
         handleErr(res, 400, "Body must not be empty.");
         return
     }
-    let sql = "INSERT INTO user (email, username, password, permission, access_token) VALUES (?, ?, ?, ?, '')";
-    let values = [req.body.email, req.body.username, md5(req.body.password), 2];
+    let id = req.params['id'];
+    let sql = "UPDATE user SET email=?, username=?, password=? WHERE id=?";
+    let values = [req.body.email, req.body.username, md5(req.body.password), id];
     db.query(sql, values, (err) => {
         if (err) {
             generalErr(res);
             return
         }
-        handleSuccess(res, 201, {message: "Created a new staff successfully."})
+        handleSuccess(res, 201, {message: "Update staff successfully."})
     })
 };
 
