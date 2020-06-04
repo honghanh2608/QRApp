@@ -28,6 +28,9 @@ app.use(function (req, res, next) {
 });
 
 //
+
+console.log('port', process.env.port);
+
 app.use('/api/v1', product);
 app.use('/v1/auth', authRouter);
 app.use('/v1/staff', staffRouter);
@@ -52,4 +55,4 @@ app.use(function (err, req, res, next) {
 });
 
 
-app.listen(process.env.port || 3000);
+app.listen(3000);
