@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const pc = require('./product.controller');
 
-router.get('/products/:productId', pc.getProduct);
-router.post('/1/products', pc.createProduct);
-router.put('/admin/products/:productId', pc.updateProduct);
-router.delete('/admin/products/:productId', pc.deleteProduct);
+
+router.get('/', pc.getAll);
+router.get('/:productId', pc.getProduct);
+router.post('/', pc.createProduct);
+router.put('/:productId', pc.updateProduct);
+router.delete('/:productId', pc.deleteProduct);
 
 module.exports = router;
