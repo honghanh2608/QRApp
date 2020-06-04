@@ -1,6 +1,17 @@
 const db = require('../models/database');
 const generalErr = require('../messages').generalErr;
 
+exports.getAll = function(req, res) {
+    let sql = 'SELECT * FROM product';
+    db.query(sql, [], (err, result) => {
+        if (err) {
+            generalErr(res);
+            return;
+        }
+        res.status(200).json(result);
+    })
+};
+
 exports.getProduct = function (req, res) {
     let product = null;
     let reviews = null;

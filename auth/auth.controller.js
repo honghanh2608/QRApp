@@ -4,6 +4,7 @@ const handleSuccess = require('../messages').handleSuccess;
 const generalErr = require('../messages').generalErr;
 const jwt = require('jsonwebtoken');
 const secretKey = "vietnam";
+const md5 = require('md5');
 
 const user = function (req, res) {
     if (!req.body) {
@@ -58,7 +59,7 @@ const admin = function (req, res) {
             return
         }
         let account = result[0];
-        if (account.password !== req.body.password) {
+        if (account.password !== md5(req.body.password)) {
             handleErr(res, 401, "Password is not correct");
             return
         }
@@ -99,7 +100,7 @@ const staff = function (req, res) {
             return
         }
         let account = result[0];
-        if (account.password !== req.body.password) {
+        if (account.password !== md5(req.body.password)) {
             handleErr(res, 401, "Password is not correct");
             return
         }

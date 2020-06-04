@@ -1,24 +1,17 @@
-// const db = require('./models/database');
-//
-// sql = 'UPDATE user SET access_token = ? WHERE id = ?';
-// db.query(sql, ['nmp', 3], (err, response) => {
-//   if (err) throw err;
-//   console.log(response);
+const sqlite3 = require('sqlite3').verbose();
+let db = new sqlite3.Database('./data.sqlite', (err) => {
+    if (err) {
+        console.error(err.message);
+    }
+    console.log('Connected to the chinook database.');
+});
+// db.each('SELECT * FROM category', (err, row) => {
+//     console.log(row)
 // });
-//
-//
-//
-//
-//
 
-const jwt = require('jsonwebtoken');
-let payload = {
-    email: '123@gmail.com',
-    id: 3,
-    exp: 1588697030
-};
-// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEyM0BnbWFpbC5jb20iLCJpZCI6MywiZXhwIjoxNTg4Njk3MDMwLCJpYXQiOjE1ODg2OTM0MzB9.Jf9yxRU0OVID3Odr2tXbzCz84LgduLQXL3n8Y_9kjT";
-let token = jwt.sign(payload, 'vietnam');
-console.log(token);
-const decoded = jwt.verify(token, 'vietnam');
-console.log(decoded);
+db.run('INSERT INTO category(name) VALUES ("Đồ hộp")', [], (err, row) => {
+    console.log(err);
+    console.log(row)
+});
+
+
