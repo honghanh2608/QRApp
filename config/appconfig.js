@@ -6,10 +6,10 @@ const db = {
         database: "qr_app"
     },
     db4free: {
-        host: "localhost",
-        user: "root",
-        password: "",
-        database: "qr_app"
+        host: "db4free.net",
+        user: "honghanh",
+        password: "anythingL",
+        database: "qrappserver"
     },
     freemysqlhosting: {
         host: "sql12.freemysqlhosting.net",
