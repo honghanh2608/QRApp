@@ -9,9 +9,13 @@ let db = new sqlite3.Database('./data.sqlite', (err) => {
 //     console.log(row)
 // });
 
-db.run('INSERT INTO category(name) VALUES ("Đồ hộp")', [], (err, row) => {
-    console.log(err);
-    console.log(row)
-});
 
+
+db.serialize(function () {
+    db.run('INSERT INTO category(name) VALUES ("Đồ hộp")', [], function(err, row) {
+        console.log(err);
+        console.log(row);
+        console.log(this);
+    });
+});
 

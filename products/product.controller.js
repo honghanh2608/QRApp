@@ -1,7 +1,8 @@
-const db = require('../models/database');
+// const db = require('../models/database');
 const generalErr = require('../messages').generalErr;
+const db = require('../models/dbsqlite');
 
-exports.getAll = function(req, res) {
+exports.getAll = function (req, res) {
     let sql = 'SELECT * FROM product';
     db.query(sql, [], (err, result) => {
         if (err) {
@@ -14,21 +15,15 @@ exports.getAll = function(req, res) {
 
 exports.getProduct = function (req, res) {
     let product = null;
-    let reviews = null;
-    let productId = req.params.productId;
-    let sql = 'SELECT * FROM product WHERE product.id = ?';
-    db.query(sql, [productId], (err, response) => {
+    let barcode = req.query['barcode'];
+    console.log(barcode);
+    let sql = 'SELECT * FROM product WHERE barcode="' + barcode + '"';
+    console.log('sql', sql);
+    db.query(sql, [], (err, response) => {
         if (err) throw err;
         product = response[0];
-        sql = 'SELECT user.username, review.content, review.rate, review.datetime FROM user JOIN review ON user.id = review.user_id WHERE review.product_id = ?';
-        db.query(sql, [productId], (err, response) => {
-            if (err) throw err;
-            reviews = response;
-            if (product != null && reviews != null) {
-                product.reviews = reviews;
-                res.status(200).json(product);
-            }
-        })
+        console.log(response);
+        res.status(200).json(product);
     })
 };
 
@@ -43,13 +38,10 @@ exports.createProduct = function (req, res) {
         req.body['count'],
         req.body['price'],
         req.body['category_id'],
+        req.body['barcode']
     ];
-    db.query(sql, params, (err, result) => {
-        if (err) {
-            generalErr(res);
-            return
-        }
-        let id = result.insertId;
+    db.run(sql, params, (result) => {
+        let id = result['lastID'];
         res.status(201).json({
             id: id,
             name: req.body.name,
@@ -59,7 +51,8 @@ exports.createProduct = function (req, res) {
             exp: req.body['exp'],
             count: req.body['count'],
             price: req.body['price'],
-            category_id: req.body['category_id']
+            category_id: req.body['category_id'],
+            barcode: req.body['barcode']
         })
     })
 };
@@ -70,12 +63,12 @@ exports.updateProduct = function (req, res) {
     let count = req.body['count'];
     if (count < 0) {
         res.status(400).json({
-           message: 'Count must be non-negative value'
+            message: 'Count must be non-negative value'
         });
         return
     }
     let sql = 'UPDATE product SET count=? WHERE id=?';
-    db.query(sql, [id, count], (err, result) => {
+    db.run(sql, [id, count], (err, result) => {
         if (err) {
             generalErr(res);
             return

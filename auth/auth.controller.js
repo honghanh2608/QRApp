@@ -1,4 +1,4 @@
-const db = require('../models/database');
+const db = require('../models/dbsqlite');
 const handleErr = require('../messages').handleErr;
 const handleSuccess = require('../messages').handleSuccess;
 const generalErr = require('../messages').generalErr;
