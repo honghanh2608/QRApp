@@ -28,7 +28,7 @@ exports.getProduct = function (req, res) {
 };
 
 exports.createProduct = function (req, res) {
-    let sql = "INSERT INTO product (name, properties, manufacturer, mfg, exp, count, price, category_id) VALUES (?,?,?,?,?,?,?,?)";
+    let sql = "INSERT INTO product (name, properties, manufacturer, mfg, exp, count, price, category_id, barcode) VALUES (?,?,?,?,?,?,?,?,?)";
     let params = [
         req.body.name,
         req.body.properties,

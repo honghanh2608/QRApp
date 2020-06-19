@@ -14,6 +14,7 @@ exports.query = function(sql, params, cb) {
 
 exports.run = function (sql, params, cb) {
     db.serialize(function () {
+        console.log('sql', sql);
         db.run(sql, params, function () {
             cb(this)
         });
