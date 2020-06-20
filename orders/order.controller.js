@@ -17,13 +17,13 @@ const getAll = function (req, res) {
 
 const getOne = function (req, res) {
     let id = req.params['id'];
-    let sql = 'SELECT `order`.*, product.properties FROM `order` INNER JOIN product ON `order`.`product_id` = product.id WHERE `order`.`id` = ?';
+    let sql = 'SELECT * FROM tblorder WHERE id=?';
     db.query(sql, [id], (err, result) => {
         if (err) {
             generalErr(res);
             return
         }
-        handleGet(res, result[0])
+        handleGet(res, result)
     })
 };
 
@@ -32,10 +32,10 @@ const create = function (req, res) {
     let data = req.body['data'];
     let flag = true;
     data.map(item => {
-        let sql = 'INSERT INTO tblorder (id, product_id, quantity, created_at, updated_at) VALUES (?, ?, ?, ?, ?)'
+        let sql = 'INSERT INTO tblorder (id, barcode, quantity, created_at, updated_at) VALUES (?, ?, ?, ?, ?)';
         let params = [
             timestamp.getTime(),
-            item['productId'],
+            item['barcode'],
             item['quantity'],
             timestamp.getTime(),
             timestamp.getTime()
@@ -45,7 +45,7 @@ const create = function (req, res) {
         })
     });
     if (flag) {
-        res.status(201).json({message: 'Success'})
+        res.status(201).json({orderId: timestamp.getTime()})
     } else {
         res.status(400).json({message: 'Failed'})
     }

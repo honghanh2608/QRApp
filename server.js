@@ -12,12 +12,23 @@ const staffRouter = require('./staffs/staff.route');
 const orderRouter = require('./orders/order.route');
 const productRouter = require('./products/product.route');
 const key = 'vietnam';
+const indexRouter = require('./index/index.route');
 
-app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static('./public'));
+app.use('/static', express.static('static'));
+
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+
+app.get('/', function (req, res) {
+    res.render('index', {
+        title: 'Title'
+    })
+});
 
 app.use(function (req, res, next) {
     if (req.url.indexOf('/admin') === -1) {//không có admin
@@ -30,7 +41,7 @@ app.use(function (req, res, next) {
 //
 
 console.log('port', process.env.port);
-
+app.use('/view/', indexRouter);
 app.use('/api/v1', product);
 app.use('/v1/auth', authRouter);
 app.use('/v1/staff', staffRouter);
@@ -50,7 +61,7 @@ app.use(function (err, req, res, next) {
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
     // render the error page
-    res.status(err.status || 500);
+    res.status(500);
     res.render('error');
 });
 
