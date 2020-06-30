@@ -130,8 +130,53 @@ const staff = function (req, res) {
     })
 };
 
+const auth = function (req, res) {
+    if (!req.body) {
+        handleErr(res, 400, "Body must not be empty");
+        return;
+    }
+    let sql = 'SELECT * FROM user WHERE email=?';
+    db.query(sql, [req.body.email], (err, result) => {
+        if (err) {
+            generalErr(res);
+            return
+        }
+        console.log(result);
+        if (result.length === 0) {
+            handleErr(res, 401, "Email is not correct");
+            return
+        }
+        let account = result[0];
+        if (account.password !== md5(req.body.password)) {
+            handleErr(res, 401, "Password is not correct");
+            return
+        }
+        // if (account.permission !== 2) {
+        //     handleErr(res, 401, "You are not a staff");
+        //     return
+        // }
+        let payload = {
+            email: req.body.email,
+            id: account.id,
+            permission: account.permission,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60)
+        };
+        let permission = account.permission;
+        let role = (permission === 0) ? "user" : (permission === 1 ? "admin" : "staff");
+        let token = jwt.sign(payload, secretKey);
+        console.log(token);
+        handleSuccess(res, 200, {
+            id: account.id,
+            permission: account.permission,
+            message: 'Logged in as ' + role,
+            access_token: token
+        });
+    })
+};
+
 module.exports = {
     user,
     admin,
-    staff
+    staff,
+    auth
 };
