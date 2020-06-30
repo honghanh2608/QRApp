@@ -5,13 +5,26 @@ const generalErr = require('../messages').generalErr;
 const handleGet = require('../messages').handleGet;
 
 const getAll = function (req, res) {
-    let sql = 'SELECT * FROM `order`';
+    let sql = 'SELECT tblorder.id as orderId, tblorder.quantity, tblorder.created_at, product.* from tblorder INNER JOIN product on product.barcode = tblorder.barcode';
     db.query(sql, [], function (err, result) {
         if (err) {
             generalErr(res);
             return
         }
-        handleGet(res, result)
+        let arr = [];
+        result.map(item => {
+            let order = arr.find(or => or['id'] === item['orderId']);
+            if (order) {
+                order['products'].push(item)
+            } else {
+                order = {
+                    id: item['orderId'],
+                    products: [item]
+                };
+                arr.push(order);
+            }
+        });
+        handleGet(res, arr)
     })
 };
 
