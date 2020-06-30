@@ -36,6 +36,8 @@ const user = function (req, res) {
         let token = jwt.sign(payload, secretKey);
         console.log(token);
         handleSuccess(res, 200, {
+            id: account.id,
+            permission: account.permission,
             message: 'Logged in successfully',
             access_token: token
         });
@@ -77,6 +79,8 @@ const admin = function (req, res) {
         let token = jwt.sign(payload, secretKey);
         console.log(token);
         handleSuccess(res, 200, {
+            id: account.id,
+            permission: account.permission,
             message: 'Logged in as admin',
             access_token: token
         });
@@ -118,6 +122,8 @@ const staff = function (req, res) {
         let token = jwt.sign(payload, secretKey);
         console.log(token);
         handleSuccess(res, 200, {
+            id: account.id,
+            permission: account.permission,
             message: 'Logged in as staff',
             access_token: token
         });
