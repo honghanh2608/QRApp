@@ -26,7 +26,7 @@ const update = function(req, res) {
         return
     }
     let id = req.params['id'];
-    let sql = "UPDATE user SET email=?, username=?, password=? WHERE id=?";
+    let sql = "UPDATE user SET password=? WHERE id=?";
     let values = [req.body.email, req.body.username, md5(req.body.password), id];
     db.query(sql, values, (err) => {
         if (err) {

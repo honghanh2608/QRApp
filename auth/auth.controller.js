@@ -174,9 +174,40 @@ const auth = function (req, res) {
     })
 };
 
+const changePassword = function(req, res, next) {
+    if (!req.headers['access_token']) {
+        res.status(401).json({
+            message: 'Unauthorized'
+        });
+        return;
+    }
+    let id = req.body['id'];
+    let oldPassword = req.body['oldPassword'];
+    let newPassword = req.body['newPassword'];
+    if (!oldPassword) {
+        res.status(400).json({message: 'Old password not found'});
+        return
+    }
+    if (!newPassword) {
+        res.status(400).json({message: 'New password not found'});
+        return
+    }
+    db.query('SELECT * FROM user WHERE id=? and password=?', [id, md5(oldPassword)], (err, result) => {
+        if (!result) {
+            res.status(400).json({message: 'Old message is incorrect'});
+            return
+        }
+        let params = [md5(newPassword), id];
+        db.run('UPDATE user SET password=? WHERE id=?', params, (r) => {
+            res.status(200).json({message: 'Password is update successfully'});
+        })
+    })
+};
+
 module.exports = {
     user,
     admin,
     staff,
-    auth
+    auth,
+    changePassword
 };
