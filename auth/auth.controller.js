@@ -159,7 +159,7 @@ const auth = function (req, res) {
             email: req.body.email,
             id: account.id,
             permission: account.permission,
-            exp: Math.floor(Date.now() / 1000) + (60 * 60)
+            exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60)
         };
         let permission = account.permission;
         let role = (permission === 0) ? "user" : (permission === 1 ? "admin" : "staff");
@@ -169,7 +169,8 @@ const auth = function (req, res) {
             id: account.id,
             permission: account.permission,
             message: 'Logged in as ' + role,
-            access_token: token
+            access_token: token,
+            username: account.username
         });
     })
 };
